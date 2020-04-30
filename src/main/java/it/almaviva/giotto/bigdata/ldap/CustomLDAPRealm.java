@@ -529,6 +529,9 @@ public final class CustomLDAPRealm extends IASRealm
              _logger.log(Level.FINE, "LDAP: login succeeded for: " + _username);
         }
 
+        for (String g : grpList) {
+            _logger.log(Level.INFO, "CUSTOM_GROUP: " + g);
+        }
         return grpList;
     }
 
