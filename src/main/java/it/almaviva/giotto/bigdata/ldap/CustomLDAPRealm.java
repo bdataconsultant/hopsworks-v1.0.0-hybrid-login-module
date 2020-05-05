@@ -100,6 +100,8 @@ public final class CustomLDAPRealm extends IASRealm
     public static final String SUBST_SUBJECT_NAME="%s";
     public static final String SUBST_SUBJECT_DN="%d";
 
+    public static final String PARAM_KEYFILE = "key-file";
+
     // Defaults
     private static final String SEARCH_FILTER_DEFAULT=
                                      "uid="+SUBST_SUBJECT_NAME;
@@ -111,6 +113,8 @@ public final class CustomLDAPRealm extends IASRealm
     private static final String JNDICF_DEFAULT=
                                      "com.sun.jndi.ldap.LdapCtxFactory";
     private static final int POOLSIZE_DEFAULT=5;
+
+
 
     private final String[] _dnOnly = {"dn"};
     
@@ -481,15 +485,7 @@ public final class CustomLDAPRealm extends IASRealm
 
             // set group for admin, agent and service, and all other users
             ArrayList groupsList = new ArrayList();
-            if (_username.equals("admin@hopsworks.ai")) {
-                groupsList.add("HOPS_ADMIN");
-            } else if (_username.equals("agent@hops.io")) {
-                groupsList.add("AGENT");
-            } else if (_username.equals("serving@hopsworks.se")) {
-                // leave empty
-            } else {
-                groupsList.add("HOPS_USER");
-            }
+            groupsList.add("HOPS_USER");
 
             grpList = new String[groupsList.size()];
             groupsList.toArray(grpList);

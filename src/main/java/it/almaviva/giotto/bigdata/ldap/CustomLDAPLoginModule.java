@@ -28,15 +28,25 @@ public class CustomLDAPLoginModule extends PasswordLoginModule
             throw new LoginException(msg);
         }
 
-        String mode = _currentRealm.getProperty(CustomLDAPRealm.PARAM_MODE);
+        String[] grpList = null;
 
-        if (CustomLDAPRealm.MODE_FIND_BIND.equals(mode)) {
-            String[] grpList = _ldapRealm.findAndBind(_username, getPasswordChar());
-            commitAuthentication(_username, getPasswordChar(),
-                    _currentRealm, grpList);
-        } else {
-            String msg = sm.getString("ldaplm.badmode", mode);
-            throw new LoginException(msg);
+        // try service account login first
+        String file = _currentRealm.getProperty(CustomLDAPRealm.PARAM_KEYFILE);
+        CustomLDAPFileAuthenticator fileRealm = new CustomLDAPFileAuthenticator(file, sm);
+        grpList = fileRealm.authenticate(getUsername(), getPasswordChar());
+
+        if (grpList == null) {
+            // in case not found try common user login
+            String mode = _currentRealm.getProperty(CustomLDAPRealm.PARAM_MODE);
+            if (CustomLDAPRealm.MODE_FIND_BIND.equals(mode)) {
+                grpList = _ldapRealm.findAndBind(_username, getPasswordChar());
+            } else {
+                String msg = sm.getString("ldaplm.badmode", mode);
+                throw new LoginException(msg);
+            }
         }
+
+        commitAuthentication(_username, getPasswordChar(),
+                _currentRealm, grpList);
     }
 }
