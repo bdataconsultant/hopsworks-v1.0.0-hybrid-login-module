@@ -34,14 +34,10 @@ public class CustomLDAPLoginModule extends PasswordLoginModule
         String[] grpList = null;
 
         // try service account login first
-        try {
-            String file = _currentRealm.getProperty(CustomLDAPRealm.PARAM_KEYFILE);
-            CustomLDAPFileAuthenticator fileRealm = new CustomLDAPFileAuthenticator(file, sm);
-            grpList = fileRealm.authenticate(getUsername(), getPasswordChar());
-        } catch (LoginException e) {
-            _logger.log(Level.SEVERE, "FILE AUTHENTICATOR" + e.getMessage(), e);
-            throw e;
-        }
+        String file = _currentRealm.getProperty(CustomLDAPRealm.PARAM_KEYFILE);
+        CustomLDAPFileAuthenticator fileAuthenticator = new CustomLDAPFileAuthenticator(file, sm);
+        grpList = fileAuthenticator.authenticate(getUsername(), getPasswordChar());
+
 
         if (grpList == null) {
             // in case not found try common user login
