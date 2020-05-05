@@ -1,8 +1,11 @@
 package it.almaviva.giotto.bigdata.ldap;
 
+import com.sun.enterprise.security.SecurityLoggerInfo;
 import com.sun.enterprise.security.auth.login.PasswordLoginModule;
 
 import javax.security.auth.login.LoginException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CustomLDAPLoginModule extends PasswordLoginModule
 {
@@ -31,9 +34,14 @@ public class CustomLDAPLoginModule extends PasswordLoginModule
         String[] grpList = null;
 
         // try service account login first
-        String file = _currentRealm.getProperty(CustomLDAPRealm.PARAM_KEYFILE);
-        CustomLDAPFileAuthenticator fileRealm = new CustomLDAPFileAuthenticator(file, sm);
-        grpList = fileRealm.authenticate(getUsername(), getPasswordChar());
+        try {
+            String file = _currentRealm.getProperty(CustomLDAPRealm.PARAM_KEYFILE);
+            CustomLDAPFileAuthenticator fileRealm = new CustomLDAPFileAuthenticator(file, sm);
+            grpList = fileRealm.authenticate(getUsername(), getPasswordChar());
+        } catch (LoginException e) {
+            _logger.log(Level.SEVERE, "FILE AUTHENTICATOR" + e.getMessage(), e);
+            throw e;
+        }
 
         if (grpList == null) {
             // in case not found try common user login
