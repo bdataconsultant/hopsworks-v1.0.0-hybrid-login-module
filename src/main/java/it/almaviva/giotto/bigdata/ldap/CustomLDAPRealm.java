@@ -180,6 +180,7 @@ public final class CustomLDAPRealm extends IASRealm
             throw new BadRealmException(msg);
         }
         this.setProperty(PARAM_MODE, mode);
+        this.setProperty(PARAM_KEYFILE, props.getProperty(PARAM_KEYFILE));
 
         String ctxF = props.getProperty(PARAM_JNDICF, JNDICF_DEFAULT);
         this.setProperty(PARAM_JNDICF, ctxF);

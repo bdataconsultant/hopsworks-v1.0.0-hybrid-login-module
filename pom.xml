@@ -15,13 +15,13 @@
       <groupId>org.glassfish.main.security</groupId>
       <artifactId>security</artifactId>
       <version>${payara.version}</version>
-      <scope>compile</scope>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.glassfish.main.common</groupId>
       <artifactId>common-util</artifactId>
       <version>${payara.version}</version>
-      <scope>compile</scope>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 
